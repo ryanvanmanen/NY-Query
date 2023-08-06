@@ -19,7 +19,7 @@ PWL_data <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Quer
 CSLAP_data  <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/CSLAP/CSLAP_data.csv"
 
 ui <- fluidPage(
-  titlePanel("NYS DEC Waterbody Inventory/Priority Waterbodies List"),
+  titlePanel("NYS Waterbody Query"),
   tabsetPanel(
     tabPanel("Waterbody Inventory", 
              mainPanel(

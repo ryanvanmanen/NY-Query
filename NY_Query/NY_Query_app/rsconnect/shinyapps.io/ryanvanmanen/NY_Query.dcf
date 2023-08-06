@@ -5,7 +5,7 @@ account: ryanvanmanen
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 9563337
-bundleId: 7537495
+bundleId: 7537506
 url: https://ryanvanmanen.shinyapps.io/NY_Query/
 version: 1
 asMultiple: FALSE
