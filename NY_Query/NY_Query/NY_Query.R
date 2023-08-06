@@ -1,10 +1,22 @@
+#
+# This is a Shiny web application. You can run the application by clicking
+# the 'Run App' button above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    http://shiny.rstudio.com/
+#
+
+library(shiny)
 
 library(shiny)
 library(shinyjs)
 library(DT)
+library(rsconnect)
 
-PWL_data <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/PWL_2023/PWL_2023.csv"
-CSLAP_data  <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/CSLAP/CSLAP_data.csv"
+
+PWL_data <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/PWL_2023/PWL_2023.csv"
+CSLAP_data  <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/CSLAP/CSLAP_data.csv"
 
 ui <- fluidPage(
   titlePanel("NYS DEC Waterbody Inventory/Priority Waterbodies List"),
@@ -61,7 +73,7 @@ server <- function(input, output) {
   
   output$table2 <- renderDT({
     datatable(data2(), options = list(searchHighlight = TRUE, searching = TRUE,
-                       width = "100%",scrollX=TRUE, autoWidth = TRUE, fixedColumns=TRUE),
+                                      width = "100%",scrollX=TRUE, autoWidth = TRUE, fixedColumns=TRUE),
               filter="top",class = 'cell-border stripe')
   })
 }
