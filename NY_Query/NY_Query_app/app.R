@@ -1,10 +1,7 @@
 #
-# This tool 
-# 
+# This tool displays waterbody data and metadata from a few NYS sources. 
+# This is for internal EPA only.
 #
-# 
-#
-#    http://shiny.rstudio.com/
 #
 
 library(shiny)
