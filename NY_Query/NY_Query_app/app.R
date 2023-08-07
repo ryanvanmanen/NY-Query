@@ -11,7 +11,7 @@ library(rsconnect)
 
 
 PWL_data <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/PWL_2023/PWL_2023.csv"
-#CSLAP_data  <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/CSLAP/CSLAP_data.csv"
+Stream_data  <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/Stream_Monitoring_Sites.csv"
 #WQS_data <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/Waterbody_Classifications.csv"
 
 ui <- fluidPage(
@@ -29,14 +29,12 @@ ui <- fluidPage(
                style = 'width:100%;'
              )
     ),
-#    tabPanel("CSLAP",
-#            mainPanel(
-#               h4('Updated February 2023'),
-#               verbatimTextOutput("rowCount2"),
-#               DTOutput("table2"),
-#               style = 'width:100%;'
-#             )),
-   
+    tabPanel("Stream Monitoring",
+            mainPanel(
+              h5(a("NYS DEC Monitoring Portal", href="https://nysdec.maps.arcgis.com/apps/webappviewer/index.html?id=692b72ae03f14508a0de97488e142ae1")),
+               DTOutput("table2"),
+               style = 'width:100%;'
+             )),
 ))
 
 server <- function(input, output) {
@@ -47,10 +45,10 @@ server <- function(input, output) {
     return(df)
   })
   
-#  data2 <- reactive({
-#    df <- read.csv(CSLAP_data)
-#    return(df)
-#  })
+  data2 <- reactive({
+    df <- read.csv(Stream_data)
+    return(df)
+  })
   
   
   output$rowCount1 <- renderText({
@@ -68,16 +66,16 @@ server <- function(input, output) {
   })
   
   
-#  output$rowCount2 <- renderText({
-#    req(data2())
-#    paste("Total CSLAP Lakes: ", nrow(data2()))
-#  })
+  output$rowCount2 <- renderText({
+    req(data2())
+    paste("Total CSLAP Lakes: ", nrow(data2()))
+  })
   
-#  output$table2 <- renderDT({
-#    datatable(data2(), options = list(searchHighlight = TRUE, searching = TRUE,
-#                                      width = "100%",scrollX=TRUE, autoWidth = TRUE, fixedColumns=TRUE),
-#              filter="top",class = 'cell-border stripe')
-#  })
+  output$table2 <- renderDT({
+    datatable(data2(), options = list(searchHighlight = TRUE, searching = TRUE,
+                                      width = "100%",scrollX=TRUE, autoWidth = TRUE, fixedColumns=TRUE),
+              filter="top",class = 'cell-border stripe')
+  })
   
   
   output$downloadTable1 <- downloadHandler(
