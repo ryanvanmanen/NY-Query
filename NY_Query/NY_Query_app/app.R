@@ -7,7 +7,6 @@
 #    http://shiny.rstudio.com/
 #
 
-library(shiny)
 
 library(shiny)
 library(shinyjs)
@@ -15,8 +14,10 @@ library(DT)
 library(rsconnect)
 
 
-PWL_data <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/PWL_2023/PWL_2023.csv"
-CSLAP_data  <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/CSLAP/CSLAP_data.csv"
+PWL_data <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/PWL_2023/PWL_2023.csv"
+CSLAP_data  <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/CSLAP/CSLAP_data.csv"
+WQS_data <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/Waterbody_Classifications.csv"
+
 
 ui <- fluidPage(
   titlePanel("NYS Waterbody Query"),
@@ -35,9 +36,14 @@ ui <- fluidPage(
                verbatimTextOutput("rowCount2"),
                DTOutput("table2"),
                style = 'width:100%;'
-             )
-    )
-  )
+             )),
+    tabPanel("WQS Classifications",
+             mainPanel(
+               h4(''),
+               DTOutput("table3"),
+               style = 'width:100%;'
+             ))
+)
 )
 
 server <- function(input, output) {
@@ -53,6 +59,11 @@ server <- function(input, output) {
     df <- read.csv(CSLAP_data)
     return(df)
   })
+  data3 <- reactive({
+    df <- read.csv(WQS_data)
+    return(df)
+  })
+  
   
   output$rowCount1 <- renderText({
     req(data1())
@@ -73,6 +84,13 @@ server <- function(input, output) {
   
   output$table2 <- renderDT({
     datatable(data2(), options = list(searchHighlight = TRUE, searching = TRUE,
+                                      width = "100%",scrollX=TRUE, autoWidth = TRUE, fixedColumns=TRUE),
+              filter="top",class = 'cell-border stripe')
+  })
+  
+  
+  output$table3 <- renderDT({
+    datatable(data3(), options = list(searchHighlight = TRUE, searching = TRUE,
                                       width = "100%",scrollX=TRUE, autoWidth = TRUE, fixedColumns=TRUE),
               filter="top",class = 'cell-border stripe')
   })
