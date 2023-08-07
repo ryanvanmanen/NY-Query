@@ -1,4 +1,4 @@
-Segment ID,6NYCRR Chapter X Part,Water Quality Class,Waterbody Index Number (WIN),Name,Description,Basin,Segment Miles,Waterbody Type
+Segment_ID,6NYCRR_Chapter_X_Part,Water_Quality_Class,Waterbody_Index_Number (WIN),Name,Description,Basin,Segment Miles,Waterbody_Type
 0601-0104,931,C,SR-183-P335,Fox Vly,entire lake,Susquehanna River,,Ponds
 0602-0018,931,B,SR- 44-14-60-P68,Tully Lake,entire lake,Susquehanna River,,Ponds
 1101-0012,941,A,H-299-P27,Saratoga Lake,entire lake,Upper Hudson River,,Ponds
