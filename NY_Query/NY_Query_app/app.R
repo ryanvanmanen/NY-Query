@@ -39,7 +39,7 @@ ui <- fluidPage(
              )),
     tabPanel("WQS Classifications",
              mainPanel(
-               h4(''),
+               h4("WQS: ",a("Westlaw",href="https://govt.westlaw.com/nycrr/Browse/Home/NewYork/NewYorkCodesRulesandRegulations?guid=I0b616fc0b5a111dda0a4e17826ebc834&originationContext=documenttoc&transitionType=Default&contextData=(sc.Default)")),
                DTOutput("table3"),
                style = 'width:100%;'
              ))
@@ -87,7 +87,6 @@ server <- function(input, output) {
                                       width = "100%",scrollX=TRUE, autoWidth = TRUE, fixedColumns=TRUE),
               filter="top",class = 'cell-border stripe')
   })
-  
   
   output$table3 <- renderDT({
     datatable(data3(), options = list(searchHighlight = TRUE, searching = TRUE,
