@@ -1,27 +1,33 @@
 #
 # This tool displays waterbody data and metadata from a few NYS sources. 
-# This is for internal EPA only.
-#
+# This is for internal EPA use only.
+
 #
 
 library(shiny)
 library(shinyjs)
 library(DT)
 library(rsconnect)
+library(leaflet)
+library(geojsonR)
 
 
 PWL_data <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/PWL_2023/PWL_2023.csv"
 Stream_data  <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/Stream_Monitoring_Sites.csv"
 #WQS_data <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/Waterbody_Classifications.csv"
+#map_data = FROM_GeoJson("https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/Aquatic_Biological_Monitoring.geojson")
+
+
+
 
 ui <- fluidPage(
   titlePanel("NYS Waterbodies Query"),
   tabsetPanel(
     tabPanel("Waterbodies Inventory", 
              mainPanel(
-               h5(a("Waterbody Inventory Data Source", href="https://data.gis.ny.gov/maps/fe6e369f89444618920a5b49f603e34a/about")),
-               h5(a("WQS Data Source", href="https://data.ny.gov/Energy-Environment/Waterbody-Classifications/8xz8-5u5u")),
-               h5("WQS: ",a("Westlaw",href="https://govt.westlaw.com/nycrr/Browse/Home/NewYork/NewYorkCodesRulesandRegulations?guid=I0b616fc0b5a111dda0a4e17826ebc834&originationContext=documenttoc&transitionType=Default&contextData=(sc.Default)")),
+               h5(a("Waterbody Inventory Data Source", href="https://data.gis.ny.gov/maps/fe6e369f89444618920a5b49f603e34a/about",target="_blank")),
+               h5(a("WQS Data Source", href="https://data.ny.gov/Energy-Environment/Waterbody-Classifications/8xz8-5u5u",target="_blank")),
+               h5("WQS: ",a("Classifications by basin",href="https://www.dec.ny.gov/regs/2485.html",target="_blank")),
               
                verbatimTextOutput("rowCount1"),
                downloadButton("downloadTable1", "Download Selected Rows"),
@@ -31,10 +37,16 @@ ui <- fluidPage(
     ),
     tabPanel("Stream Monitoring",
             mainPanel(
-              h5(a("NYS DEC Monitoring Portal", href="https://nysdec.maps.arcgis.com/apps/webappviewer/index.html?id=692b72ae03f14508a0de97488e142ae1")),
+              h5(a("NYS DEC Monitoring Portal", href="https://nysdec.maps.arcgis.com/apps/webappviewer/index.html?id=692b72ae03f14508a0de97488e142ae1",target="_blank")),
                DTOutput("table2"),
                style = 'width:100%;'
              )),
+#    tabPanel("Stream Monitoring",
+#             mainPanel(
+#               leafletOutput("map"),
+#               h5(a("NYS DEC Monitoring Portal", href="https://nysdec.maps.arcgis.com/apps/webappviewer/index.html?id=692b72ae03f14508a0de97488e142ae1",target="_blank")),
+#               style = 'width:100%;'
+#             )),
 ))
 
 server <- function(input, output) {
@@ -50,7 +62,6 @@ server <- function(input, output) {
     return(df)
   })
   
-  
   output$rowCount1 <- renderText({
     req(data1())
     paste("Total Assessment Units: ", nrow(data1()))
@@ -62,9 +73,8 @@ server <- function(input, output) {
                              scrollX =TRUE,rowCallback = JS(
                                "function(row, data, displayNum, displayIndex, dataIndex) {
          var api = this.api();$(row).attr('data-row-index', dataIndex);}")), 
-         filter="top",escape = FALSE, class = 'cell-border stripe',)
+         filter="top",escape = FALSE, class = 'cell-border stripe',rownames = FALSE)
   })
-  
   
   output$rowCount2 <- renderText({
     req(data2())
@@ -74,7 +84,7 @@ server <- function(input, output) {
   output$table2 <- renderDT({
     datatable(data2(), options = list(searchHighlight = TRUE, searching = TRUE,
                                       width = "100%",scrollX=TRUE, autoWidth = TRUE, fixedColumns=TRUE),
-              filter="top",class = 'cell-border stripe')
+              filter="top",class = 'cell-border stripe',rownames = FALSE,)
   })
   
   
@@ -92,5 +102,11 @@ server <- function(input, output) {
     }
   )
 }
+  
+#  output$map <- renderLeaflet({
+#    leaflet(map_data)%>%
+#      setView(-72.5,40.5, 4)
+#  })
+#}
 
 shinyApp(ui, server)
