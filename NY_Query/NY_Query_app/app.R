@@ -1,7 +1,6 @@
 #
 # This tool displays waterbody data and metadata from a few NYS sources. 
-# This is for internal EPA only.
-#
+# This is for internal EPA use only.
 #
 
 library(shiny)
@@ -22,9 +21,8 @@ ui <- fluidPage(
                h5(a("Waterbody Inventory Data Source", href="https://data.gis.ny.gov/maps/fe6e369f89444618920a5b49f603e34a/about")),
                h5(a("WQS Data Source", href="https://data.ny.gov/Energy-Environment/Waterbody-Classifications/8xz8-5u5u")),
                h5("WQS: ",a("Westlaw",href="https://govt.westlaw.com/nycrr/Browse/Home/NewYork/NewYorkCodesRulesandRegulations?guid=I0b616fc0b5a111dda0a4e17826ebc834&originationContext=documenttoc&transitionType=Default&contextData=(sc.Default)")),
-              
                verbatimTextOutput("rowCount1"),
-               downloadButton("downloadTable1", "Download Selected Rows"),
+               downloadButton("downloadTable1", "Download selected rows as CSV"),
                DTOutput("table1"),
                style = 'width:100%;'
              )
@@ -32,7 +30,8 @@ ui <- fluidPage(
     tabPanel("Stream Monitoring",
             mainPanel(
               h5(a("NYS DEC Monitoring Portal", href="https://nysdec.maps.arcgis.com/apps/webappviewer/index.html?id=692b72ae03f14508a0de97488e142ae1")),
-               DTOutput("table2"),
+              downloadButton("downloadTable2", "Download selected rows as CSV"),
+              DTOutput("table2"),
                style = 'width:100%;'
              )),
 ))
@@ -42,6 +41,8 @@ server <- function(input, output) {
     df <- read.csv(PWL_data)
     df$FACT_SHEET <- paste0("<a href='",df$FACT_SHEET,"'", 'target="_blank">',df$FACT_SHEET,"</a>")
     df$HMW <- paste0("<a href='",df$HMW,"'", 'target="_blank">',df$HMW,"</a>")
+    df$USGS <- paste0("<a href='",df$USGS,"'", 'target="_blank">',df$USGS,"</a>")
+    
     return(df)
   })
   
@@ -87,6 +88,19 @@ server <- function(input, output) {
       selected_rows <- as.numeric(input$table1_rows_selected)
       if (length(selected_rows) > 0) {
         selected_data <- data1()[selected_rows, ]
+        write.csv(selected_data, file, row.names = FALSE)
+      }
+    }
+  )
+  output$downloadTable2 <- downloadHandler(
+    filename = function() {
+      paste("selected_rows_table2.csv", sep = "")
+    },
+    
+    content = function(file) {
+      selected_rows <- as.numeric(input$table2_rows_selected)
+      if (length(selected_rows) > 0) {
+        selected_data <- data2()[selected_rows, ]
         write.csv(selected_data, file, row.names = FALSE)
       }
     }
