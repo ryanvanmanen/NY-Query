@@ -1,4 +1,4 @@
-Segment_ID,Segment_Name,Water_Quality_Class,FACT_SHEET,HMW ,Waterbody_Index_Number,Description,Monitoring_Data,USGS,6NYCRR_Chapter_X_Part,Basin,Segment_Miles,Waterbody_Type,Shape__Area,Shape__Length
+Segment_ID,Segment_Name,Class,FACT_SHEET,HMW ,Waterbody_Index_Number,Description,Monitoring_Data,USGS,6NYCRR_Chapter_X_Part,Basin,Segment_Miles,Waterbody_Type,Shape__Area,Shape__Length
 0202-0004,Findley Lake,B,https://www.dec.ny.gov/data/WQP/PWL/0202-0004.html,https://mywaterway.epa.gov/waterbody-report/21NYDECA/NY0202-0004/2018,Pa-84- 2-P153,entire lake,,,800,Allegheny River,,Ponds,1203231.97,9194.610165
 0201-0016,Cuba Lake,B,https://www.dec.ny.gov/data/WQP/PWL/0201-0016.html,https://mywaterway.epa.gov/waterbody-report/21NYDECA/NY0201-0016/2018,Pa-53-54-11- 5-P115,entire lake,,,801,Allegheny River,,Ponds,1841286.801,12938.08109
 0201-0020,Case Lake,C(T),https://www.dec.ny.gov/data/WQP/PWL/0201-0020.html,https://mywaterway.epa.gov/waterbody-report/21NYDECA/NY0201-0020/2018,Pa-53-54-10-22-P109c,entire lake,,,801,Allegheny River,,Ponds,278688.6657,3593.908253
