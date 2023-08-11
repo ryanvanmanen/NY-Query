@@ -49,11 +49,17 @@ ui <- fluidPage(
 #             )),
 ))
 
+
+
 server <- function(input, output) {
   data1 <- reactive({
     df <- read.csv(PWL_data)
     df$FACT_SHEET <- paste0("<a href='",df$FACT_SHEET,"'", 'target="_blank">',df$FACT_SHEET,"</a>")
     df$HMW <- paste0("<a href='",df$HMW,"'", 'target="_blank">',df$HMW,"</a>")
+    df$Monitoring_Data <- paste0("<a href='",df$Monitoring_Data,"'", 'target="_blank">',
+                                 df$Monitoring_Data,"</a>")
+    df$USGS <- paste0("<a href='",df$USGS,"'", 'target="_blank">',df$USGS,"</a>")
+    
     return(df)
   })
   
