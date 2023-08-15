@@ -8,16 +8,11 @@ library(shiny)
 library(shinyjs)
 library(DT)
 library(rsconnect)
-library(leaflet)
-library(geojsonR)
 
 
 PWL_data <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/PWL_2023/PWL_2023.csv"
 Stream_data  <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/Stream_Monitoring_Sites.csv"
 #WQS_data <- "https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/Waterbody_Classifications.csv"
-#map_data = FROM_GeoJson("https://raw.githubusercontent.com/ryanvanmanen/WQ-Data/main/NY_Query/Data/Aquatic_Biological_Monitoring.geojson")
-
-
 
 
 ui <- fluidPage(
@@ -33,23 +28,14 @@ ui <- fluidPage(
                downloadButton("downloadTable1", "Download Selected Rows"),
                DTOutput("table1"),
                style = 'width:100%;'
-             )
-    ),
+             )),
     tabPanel("Stream Monitoring",
             mainPanel(
               h5(a("NYS DEC Monitoring Portal", href="https://nysdec.maps.arcgis.com/apps/webappviewer/index.html?id=692b72ae03f14508a0de97488e142ae1",target="_blank")),
                DTOutput("table2"),
                style = 'width:100%;'
              )),
-#    tabPanel("Stream Monitoring",
-#             mainPanel(
-#               leafletOutput("map"),
-#               h5(a("NYS DEC Monitoring Portal", href="https://nysdec.maps.arcgis.com/apps/webappviewer/index.html?id=692b72ae03f14508a0de97488e142ae1",target="_blank")),
-#               style = 'width:100%;'
-#             )),
-))
-
-
+  ))
 
 server <- function(input, output) {
   data1 <- reactive({
@@ -109,10 +95,5 @@ server <- function(input, output) {
   )
 }
   
-#  output$map <- renderLeaflet({
-#    leaflet(map_data)%>%
-#      setView(-72.5,40.5, 4)
-#  })
-#}
 
 shinyApp(ui, server)
