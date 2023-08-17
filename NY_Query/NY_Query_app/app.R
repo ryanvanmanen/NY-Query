@@ -3,6 +3,8 @@ library(shinyjs)
 library(DT)
 library(rsconnect)
 library(googlesheets4)
+library(leaflet)
+library(leaflet.extras)
 
 gs4_deauth()
 
@@ -10,6 +12,10 @@ PWL_data <- read_sheet("https://docs.google.com/spreadsheets/d/1Z58bVNeNLI1F7NRN
                        na = "NA", range="Sheet1")
 Org_data <- read_sheet("https://docs.google.com/spreadsheets/d/1Z58bVNeNLI1F7NRNCjrDATgzPfK5H03JXNKLTypTzjs/edit#gid=0",
                        na = "NA", range="Sheet2",col_names = TRUE)
+Lake_location <-read_sheet("https://docs.google.com/spreadsheets/d/1Z58bVNeNLI1F7NRNCjrDATgzPfK5H03JXNKLTypTzjs/edit#gid=0",
+                           na = "NA", range="Sheet3",col_names = TRUE)
+Stream_location <-read_sheet("https://docs.google.com/spreadsheets/d/1Z58bVNeNLI1F7NRNCjrDATgzPfK5H03JXNKLTypTzjs/edit#gid=0",
+                             na = "NA", range="Sheet4",col_names = TRUE)
 
 ui <- fluidPage(
   titlePanel("NYS Waterbodies Query"),
@@ -30,6 +36,13 @@ ui <- fluidPage(
                         DTOutput("table2"),
                         style = 'width:100%;'
                       )),
+    tabPanel("Monitoring Locations",
+             mainPanel(
+               h5("Monitoring Locations"),
+               leafletOutput("map"),
+               style = 'width:100%;', 
+               style ='height:125%;'
+             )),
     ))
 
 server <- function(input, output) {
@@ -45,7 +58,14 @@ server <- function(input, output) {
   data2 <- reactive({
     df <- Org_data
     df$Link <- paste0("<a href='",df$Link,"'", 'target="_blank">',df$Link,"</a>")
-    #print("Data2 generated successfully.")  # Debugging line
+    return(df)
+  })
+  data3 <- reactive({
+    df <- Lake_location
+    return(df)
+  })
+  data4 <- reactive({
+    df <- Stream_location
     return(df)
   })
   
@@ -82,6 +102,43 @@ server <- function(input, output) {
       }
     }
     )
+
+  output$map <- renderLeaflet({
+    leaflet() %>%
+      setView(lng = -75.849, lat = 42.7085, zoom = 6.8) %>%
+      addProviderTiles(providers$Esri.WorldTopoMap) %>%
+      addCircleMarkers(data=data3(),
+                       lng=data3()$LONGITUDE, lat=data3()$LATITUDE,
+                       popup = ~paste("Lake Name: ",data3()$LAKE_NAME, "<br>LAKE ID: ",data3()$LAKE_ID,
+                                      "<br>PWL: ", data3()$PWL_ID,"<br>Class: ", data3()$CLASS,
+                                      "<br>County: ", data3()$LAKE_COUNTIES),
+                       radius = 2,
+                       color = "#6B9B6B",
+                       fillOpacity = 0.4, group = "Lake Sites")%>%
+    
+      addCircleMarkers(data=data4(),
+                     lng=data4()$LONGITUDE, lat=data4()$LATITUDE,
+                     popup = ~paste("Stream Name: ",data4()$STREAM_NAME, "<br>LAKE ID: ",data4()$STREAM_ID,
+                                  "<br>PWL: ", data4()$PWL_ID,
+                                    "<br>Description: ", data4()$description),
+                     radius = 2,
+                     color = "#FECB00",
+                     fillOpacity = 0.8, group="Stream Sites") %>%
+    addLayersControl(
+      overlayGroups = c("Lake Sites", "Stream Sites"),
+      options = layersControlOptions(collapsed = FALSE)
+    )%>%
+      
+      addSearchFeatures(
+        targetGroups = c("Lake Sites", "Stream Sites"), # group should match addMarkers() group
+        options = searchFeaturesOptions(
+          zoom=12, openPopup = TRUE, firstTipSubmit = TRUE,
+          autoCollapse = TRUE, hideMarkerOnCollapse = TRUE
+        )
+      )
+      
+  })
+  
 }
 
 shinyApp(ui, server)
